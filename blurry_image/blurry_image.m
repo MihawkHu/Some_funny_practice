@@ -4,7 +4,7 @@ old_img = double(imread('001.jpg')) / 255;
 old_img_size = size(old_img);
 img = reshape(old_img, old_img_size(1) * old_img_size(2), 3);
 
-k = 15; % the number of classfication
+k = 20; % the number of classfication
 
 random_idx = randperm(size(img, 1));
 init = img(random_idx(1 : k), :);
@@ -13,7 +13,7 @@ img_size = size(img);
 idx = zeros(img_size(1), 1);
 cent = init;
 
-for p = 1 : 10 % iteration times
+for p = 1 : 15 % iteration times
     printf('iteration %d\n', p);
     for i = 1 : img_size(1)
         d = 1000.00;
