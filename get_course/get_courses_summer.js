@@ -269,7 +269,7 @@ function submit() { // submit
     else if (jxy == 0) setTimeout(step4, 3000);
     else if (skd == 0) setTimeout(step6, 3000);
     else if (ozwh == 0) setTimeout(step8, 3000);
-    else { alert("All done!"); while(1); };    
+    else alert("All done!")；
 }
 
 step2();
