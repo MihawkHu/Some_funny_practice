@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 #include "jzmedia.h"
 
 #define FIXED16_PRECISION 7
@@ -88,8 +89,8 @@ void matrix_mul_fix16(int M, int N, int K, int16_t alpha, int16_t *A, int lda, i
         }
     }
     
-    
     S32I2M(xr16, 0xffffffff); // enable mxu
+    int M_reduced_8 = (M - (M & 7));
     for (int k = 0; k < K; ++k) {
         int16_t *pB = &(B[k * ldb]);
         
@@ -103,7 +104,7 @@ void matrix_mul_fix16(int M, int N, int K, int16_t alpha, int16_t *A, int lda, i
             int16_t *pC = &(C[j * ldc]);
             
             int i = 0;
-            for (; i < M; i += 8) {
+            for (; i < M_reduced_8; i += 8) {
                 S32LDD(xr2, pA, 0);
                 S32LDD(xr5, pA, 4);
                 S32LDD(xr8, pA, 8);
@@ -142,7 +143,7 @@ void matrix_mul_fix16(int M, int N, int K, int16_t alpha, int16_t *A, int lda, i
             }
         }
     }
-    S32I2M(xr16,0x0); // disable mxu
+    S32I2M(xr16, 0x0); // disable mxu
     
 }
 

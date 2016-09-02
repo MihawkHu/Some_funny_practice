@@ -247,6 +247,7 @@ int16_t Tanh_fix16(int16_t x)
 
 void lstm_forward_propagate(struct Lstm *lstm, struct Matrix *in, struct Matrix *out)
 {
+    
     int cell_dim_ = lstm->cell_dim_;
     int proj_dim_ = lstm->proj_dim_;
     
