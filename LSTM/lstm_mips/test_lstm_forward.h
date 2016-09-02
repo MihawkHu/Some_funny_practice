@@ -7,7 +7,7 @@
 
 #include "matrix_cal_mips.h"
 
-#define DD 30
+#define DD 5
 
 #define ROW_MERGE 0
 #define COL_MERGE 1
@@ -237,14 +237,13 @@ float Sigmoid_float32(float x)
 
 int16_t Sigmoid_fix16(int16_t x)
 {
-    
+    return fixed16_xdiv(FIXED16_ONE, (FIXED16_ONE + fixed16_exp(-x)));
 }
 
 int16_t Tanh_fix16(int16_t x)
 {
-    
+    return fixed16(tanhf(fixed16_tofloat(x)));
 }
-
 
 void lstm_forward_propagate(struct Lstm *lstm, struct Matrix *in, struct Matrix *out)
 {

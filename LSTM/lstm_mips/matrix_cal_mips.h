@@ -2,11 +2,50 @@
 #include <string.h>
 #include "jzmedia.h"
 
-#define fixed16_xmul(A, B) ((int16_t)(((int32_t)(A) * (int32_t)(B)) >> 7))
-#define fixed16_add(A, B) ((A) + (B))
-
+#define FIXED16_PRECISION 7
 #define FIXED16_ONE (int16_t)128
 #define FIXED16_ZERO (int16_t)0
+
+#define fixed16_xmul(A, B) ((int16_t)(((int32_t)(A) * (int32_t)(B)) >> FIXED16_PRECISION))
+#define fixed16_add(A, B) ((A) + (B))
+#define fixed16_xdiv(A, B) ((int16_t)(((int32_t)(A) << (FIXED16_PRECISION)) / (int32_t)(B)))
+#define fixed16(R) ((int16_t)(((R) * ((int16_t)1 << (FIXED16_PRECISION))) + ((R) >= 0 ? 0.5 : -0.5)))
+#define fixed16_tofloat(I) (((float)(I)) / ((int16_t)1 << (FIXED16_PRECISION)))
+
+
+int16_t fixed16_pow2(int16_t x)
+{
+    static int16_t pow_p0 = fixed16(121.2740575f);
+    static int16_t pow_p1 = fixed16(27.7280233f);
+    static int16_t pow_p2 = fixed16(4.84252568f);
+    static int16_t pow_p3 = fixed16(1.49012907f);
+    static int16_t limit = fixed16(-126.0f);
+
+    do {
+        int16_t offset = (x < 0) ? FIXED16_ONE : 0;
+        int16_t clipp = (x < limit) ? limit : x;
+        int16_t w = (int16_t)fixed16_tofloat(clipp);
+        int16_t z = clipp + offset - fixed16(w);
+        int16_t y;
+        union {
+            int16_t i;
+            float f;
+        } v;
+
+        y = (clipp + pow_p0 + fixed16_xdiv(pow_p1, (pow_p2 - z)) - fixed16_xmul(pow_p3, z));
+        y = fixed16_xmul((1 << 23), y);
+        v.i = y;
+
+        return fixed16(v.f);
+    } while (0);
+}
+
+int16_t fixed16_exp(int16_t x)
+{
+    static int16_t p1 = fixed16(1.442695040f);
+
+    return fixed16_pow2(fixed16_xmul(p1, x));
+}
 
 void matrix_mul_fix16(int M, int N, int K, int16_t alpha, int16_t *A, int lda, int16_t *B, int ldb, int16_t beta, int16_t *C, int ldc)
 {
