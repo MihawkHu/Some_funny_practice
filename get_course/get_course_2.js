@@ -56,7 +56,7 @@ function judge() {
             cnt = Math.floor(Math.random() * 5);
         }
         inter_time = 3000 + inter_time;
-        console.log("Interval time: ", inter_time);
+        console.log("Interval time", total_cnt, ": ", inter_time, "ms");
         setTimeout(enter, inter_time);
     }
 }
