@@ -118,7 +118,7 @@ int main(int argc, char const *argv[])
             else {
                 for (t = 0; t < frame_size; t += c) {
                     if (i + t > num) {
-                        fprintf(out, "%.7g ", 1000.0 * buf[num]);
+                        fprintf(out, "%.7g ", 1000.0 * buf[num - 1]);
                     }
                     else {
                         // for (j = 0; j < c; ++j) {
