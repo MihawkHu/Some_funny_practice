@@ -1,4 +1,4 @@
-var tag_course_index = 378080;
+var tag_course_index = 375212;
 main = frames['main'];
 
 var total_cnt = 0;
@@ -7,7 +7,7 @@ var cnt = 0;
 function enter() {
     courses = main.document.getElementsByName("myradiogroup");
     for (var i = 0; i < courses.length; ++i) {
-        if (courses[i].value == "TY001") {
+        if (courses[i].value == "AM415") {
             courses[i].click();
             break;
         }
@@ -65,7 +65,7 @@ function choose() {
     xdcjs = main.document.getElementById("LessonTime1_btnChoose");
     xdcjs.click();
     
-    setTimeout(submit, 1500);
+    setTimeout(submit, 5000);
 }
 
 function submit() {
