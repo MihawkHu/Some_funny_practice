@@ -77,7 +77,6 @@ int main(int argc, char const *argv[])
         SNDFILE *sf;
         SF_INFO info;
         int num, num_items;
-        int *buf1;
         int f, sr, c, i, j = 0, t, v;
         int ttmp = (frame_size - 400) / 2;
         
@@ -97,27 +96,26 @@ int main(int argc, char const *argv[])
         num_items = f * c;
         // printf("Items number: %d\n", num_items);
 
-        buf1 = (int *) malloc(num_items * sizeof(int));
-		double *buf = (double *) malloc(num_items * sizeof(int));
-        num = sf_read_int(sf, buf1, num_items);
+		double *buf = (double *) malloc(num_items * sizeof(double));
+        num = sf_read_double(sf, buf, num_items);
         sf_close(sf);
         // printf("Total read number: %d\n", num);
         
 		double avg = 0.0;
 		for (int abc = 0; abc < num; ++abc) {
-			avg += buf1[abc];
+			avg += buf[abc];
 		}
 		avg = avg / num;
 		double var = 0.0;
 		for (int abc = 0; abc < num; ++abc) {
-			var += (buf1[abc] - avg) * (buf1[abc] - avg);
+			var += (buf[abc] - avg) * (buf[abc] - avg);
 		}
 		var = var / num;
 		var = sqrt(var);
 		cout << "avg" << avg << endl;
 		cout << "var" << var << endl;
 		for (int abc = 0; abc < num; ++abc) {
-			buf[abc] = ((double)buf1[abc] - avg) / var;
+			buf[abc] = (buf[abc] - avg) / var;
 		}
 
         fprintf(out, "%s  [\n", files[ff].substr(0, 9).c_str());
