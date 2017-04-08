@@ -1,0 +1,27 @@
+cmake_minimum_required(VERSION 2.8)
+
+SET(CMAKE_C_COMPILER "gcc")
+SET(CMAKE_CXX_COMPILER "g++")
+
+SET(PROJECT_NAME raytrace)
+project(${PROJECT_NAME})
+
+FIND_PACKAGE( OpenMP )
+if(OPENMP_FOUND)
+	message("OPENMP FOUND")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
+
+set(GLM_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/src/lib/)
+include_directories(${GLM_INCLUDE_DIRS})
+include_directories(${OPENMP_INCLUDE_DIR})
+
+set(COMMON_INCLUDES ${PROJECT_SOURCE_DIR}/src)
+include_directories(${COMMON_INCLUDES})
+
+file(GLOB INTERNAL_SOURCE ${PROJECT_SOURCE_DIR}/src/*.cpp ${PROJECT_SOURCE_DIR}/src/lib/src/*.cpp)
+file(GLOB INTERNAL_HEADERS ${PROJECT_SOURCE_DIR}/src/*.h ${PROJECT_SOURCE_DIR}/lib/include/*.h)
+add_executable(${PROJECT_NAME} ${INTERNAL_SOURCE} ${INTERNAL_HEADERS})
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-std=c++11")
